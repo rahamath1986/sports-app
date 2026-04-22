@@ -94,8 +94,4 @@ Both Frontend and Backend follow a strict Clean Architecture pattern:
 3.  **Video Highlights**: Integrate auto-generating clip previews via RapidAPI.
 4.  **Fantasy Helper**: Implement the "Team Generator" algorithm using historic player stats.
 
----
 
-## 📄 License
-
-Created by **Antigravity AI** for the user. MIT License.
