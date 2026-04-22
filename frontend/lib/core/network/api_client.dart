@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class ApiClient {
   final Dio dio;
-  static const String baseUrl = 'http://localhost:5000/api'; // Adjust for mobile/prod
+  static const String baseUrl = 'https://sports-app-oysb.onrender.com/api';
 
   ApiClient()
       : dio = Dio(

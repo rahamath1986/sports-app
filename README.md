@@ -59,7 +59,8 @@ A premium, full-stack sports application featuring real-time cricket insights, A
     ```bash
     flutter pub run build_runner build --delete-conflicting-outputs
     ```
-4.  Configure `lib/core/network/api_client.dart` with your backend URL.
+4.  Configure `lib/core/network/api_client.dart` with:
+    `static const String baseUrl = 'https://sports-app-oysb.onrender.com/api';`
 5.  Run the app:
     ```bash
     flutter run

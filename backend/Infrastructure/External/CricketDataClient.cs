@@ -18,23 +18,36 @@ public class CricketDataClient : ICricketDataClient
 
     public async Task<List<CricketMatch>> GetCurrentMatchesAsync()
     {
-        var response = await _httpClient.GetAsync($"currentMatches?apikey={ApiKey}");
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync();
-        var json = JObject.Parse(content);
-        var data = json["data"];
-
-        var matches = new List<CricketMatch>();
-        if (data != null)
+        try
         {
-            foreach (var item in data)
+            var response = await _httpClient.GetAsync($"currentMatches?apikey={ApiKey}");
+            if (!response.IsSuccessStatusCode)
             {
-                matches.Add(MapToMatch(item));
+                var errorMsg = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"[ERROR] Cricket API HTTP Error: {response.StatusCode} - {errorMsg}");
+                throw new Exception($"Cricket API Error: {response.StatusCode}");
             }
-        }
 
-        return matches;
+            var content = await response.Content.ReadAsStringAsync();
+            var json = JObject.Parse(content);
+            var data = json["data"];
+
+            var matches = new List<CricketMatch>();
+            if (data != null)
+            {
+                foreach (var item in data)
+                {
+                    matches.Add(MapToMatch(item));
+                }
+            }
+
+            return matches;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] GetCurrentMatchesAsync Exception: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task<CricketMatch?> GetMatchDetailsAsync(string matchId)
