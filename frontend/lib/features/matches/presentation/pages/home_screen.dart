@@ -14,123 +14,221 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final matchesAsync = ref.watch(filteredMatchesProvider);
-    final currentFilter = ref.watch(matchFilterProvider);
+    final matchesAsync = ref.watch(currentMatchesProvider);
+    final currentFilter = ref.watch(matchTypeFilterProvider); // Using renamed provider from plan
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), // Dark Navy
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          'SPORTS MASTER',
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
-            color: Colors.white,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0F172A), // Dark Navy
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            'SPORTS MASTER',
+            style: GoogleFonts.outfit(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
+              color: Colors.white,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                ref.watch(liteModeProvider) ? Icons.bolt : Icons.bolt_outlined,
+                color:
+                    ref.watch(liteModeProvider) ? Colors.amber : Colors.white24,
+              ),
+              onPressed: () => ref.read(liteModeProvider.notifier).toggle(),
+            ),
+          ],
+          bottom: TabBar(
+            dividerColor: Colors.transparent,
+            indicatorColor: Colors.blueAccent,
+            indicatorWeight: 3,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white38,
+            labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 13),
+            unselectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.normal, fontSize: 13),
+            tabs: const [
+              Tab(text: 'CURRENT'),
+              Tab(text: 'UPCOMING'),
+              Tab(text: 'PAST'),
+            ],
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              ref.watch(liteModeProvider) ? Icons.bolt : Icons.bolt_outlined,
-              color:
-                  ref.watch(liteModeProvider) ? Colors.amber : Colors.white24,
-            ),
-            onPressed: () => ref.read(liteModeProvider.notifier).toggle(),
+        drawer: Drawer(
+          backgroundColor: const Color(0xFF0F172A),
+          child: Column(
+            children: [
+              DrawerHeader(
+                decoration: const BoxDecoration(color: Colors.blueAccent),
+                child: Center(
+                  child: Text('SPORTS MASTER',
+                      style: GoogleFonts.outfit(
+                          fontWeight: FontWeight.bold, fontSize: 20)),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person_outline),
+                title: const Text('Profile'),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ProfileScreen())),
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings_outlined),
+                title: const Text('Settings'),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const SettingsScreen())),
+              ),
+            ],
           ),
-        ],
-      ),
-      drawer: Drawer(
-        backgroundColor: const Color(0xFF0F172A),
-        child: Column(
+        ),
+        body: Column(
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.blueAccent),
-              child: Center(
-                child: Text('SPORTS MASTER',
-                    style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold, fontSize: 20)),
+            // Filter Chips (Match Type)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: ['All', 'T20', 'ODI', 'Test'].map((filter) {
+                  final isSelected = currentFilter == filter;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: FilterChip(
+                      label: Text(filter),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        ref.read(matchTypeFilterProvider.notifier).setFilter(filter);
+                      },
+                      backgroundColor: Colors.white.withOpacity(0.05),
+                      selectedColor: Colors.blueAccent.withOpacity(0.2),
+                      checkmarkColor: Colors.blueAccent,
+                      labelStyle: GoogleFonts.outfit(
+                        color: isSelected ? Colors.blueAccent : Colors.white60,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontSize: 13,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: isSelected ? Colors.blueAccent : Colors.white10,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.person_outline),
-              title: const Text('Profile'),
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ProfileScreen())),
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings_outlined),
-              title: const Text('Settings'),
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SettingsScreen())),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  _MatchListContent(
+                    statusFilter: (m) => m.matchStarted && !m.matchEnded,
+                    emptyMessage: 'No live matches right now',
+                  ),
+                  _MatchListContent(
+                    statusFilter: (m) => !m.matchStarted,
+                    emptyMessage: 'No upcoming matches scheduled',
+                  ),
+                  _MatchListContent(
+                    statusFilter: (m) => m.matchEnded,
+                    emptyMessage: 'No recent match results',
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          // Filter Chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: ['All', 'T20', 'ODI', 'Test'].map((filter) {
-                final isSelected = currentFilter == filter;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: FilterChip(
-                    label: Text(filter),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      ref.read(matchFilterProvider.notifier).setFilter(filter);
-                    },
-                    backgroundColor: Colors.white.withOpacity(0.05),
-                    selectedColor: Colors.blueAccent.withOpacity(0.2),
-                    checkmarkColor: Colors.blueAccent,
-                    labelStyle: GoogleFonts.outfit(
-                      color: isSelected ? Colors.blueAccent : Colors.white60,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      fontSize: 13,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(
-                        color: isSelected ? Colors.blueAccent : Colors.white10,
-                      ),
+    );
+  }
+}
+
+class _MatchListContent extends ConsumerWidget {
+  final bool Function(entity.Match) statusFilter;
+  final String emptyMessage;
+
+  const _MatchListContent({
+    required this.statusFilter,
+    required this.emptyMessage,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final matchesAsync = ref.watch(currentMatchesProvider);
+    final matchTypeFilter = ref.watch(matchTypeFilterProvider);
+
+    return matchesAsync.when(
+      data: (allMatches) {
+        final filteredMatches = allMatches.where((m) {
+          final matchesStatus = statusFilter(m);
+          final matchesType = matchTypeFilter == 'All' || 
+              m.matchType.toLowerCase() == matchTypeFilter.toLowerCase();
+          return matchesStatus && matchesType;
+        }).toList();
+
+        return RefreshIndicator(
+          onRefresh: () => ref.refresh(currentMatchesProvider.future),
+          color: Colors.blueAccent,
+          child: filteredMatches.isEmpty
+              ? SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.sports_cricket_outlined, color: Colors.white10, size: 48),
+                        const SizedBox(height: 16),
+                        Text(
+                          matchTypeFilter == 'All' ? emptyMessage : 'No $matchTypeFilter matches found',
+                          style: GoogleFonts.outfit(color: Colors.white38),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-          Expanded(
-            child: matchesAsync.when(
-              data: (matches) => matches.isEmpty 
-                ? Center(child: Text('No $currentFilter matches found', style: const TextStyle(color: Colors.white38)))
-                : ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: matches.length,
-                itemBuilder: (context, index) {
-                  final match = matches[index];
-                  return GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MatchDetailScreen(match: match)),
-                    ),
-                    child: MatchCard(match: match),
-                  );
-                },
+                )
+              : ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  itemCount: filteredMatches.length,
+                  itemBuilder: (context, index) {
+                    final match = filteredMatches[index];
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MatchDetailScreen(match: match)),
+                      ),
+                      child: MatchCard(match: match),
+                    );
+                  },
+                ),
+        );
+      },
+      loading: () => const Center(
+          child: CircularProgressIndicator(color: Colors.blueAccent)),
+      error: (err, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, color: Colors.redAccent, size: 48),
+            const SizedBox(height: 16),
+            Text('Sync Error', style: GoogleFonts.outfit(color: Colors.white, fontSize: 18)),
+            const SizedBox(height: 8),
+            ElevatedButton.icon(
+              onPressed: () => ref.refresh(currentMatchesProvider),
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              loading: () => const Center(
-                  child: CircularProgressIndicator(color: Colors.blueAccent)),
-              error: (err, stack) => Center(
-                  child: Text('Error: $err',
-                      style: const TextStyle(color: Colors.white))),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -181,8 +279,8 @@ class MatchCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.outfit(
-                          color: Colors.white24,
-                          fontSize: 10,
+                          color: Colors.white38,
+                          fontSize: 11,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -190,6 +288,7 @@ class MatchCard extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(width: 12),
               _StatusBadge(
                 isLive: match.matchStarted && !match.matchEnded,
                 isUpcoming: !match.matchStarted,

@@ -21,17 +21,23 @@ public class CricketDataClient : ICricketDataClient
         try
         {
             var response = await _httpClient.GetAsync($"cricScore?apikey={ApiKey}");
+            var content = await response.Content.ReadAsStringAsync();
+            var json = JObject.Parse(content);
+
+            // API specific error handling (especially for hit limits)
+            if (json["status"]?.ToString() == "failure")
+            {
+                Console.WriteLine($"[WARNING] Cricket API Hit Limit Exceeded: {json["reason"]}");
+                return GetMockMatches();
+            }
+
             if (!response.IsSuccessStatusCode)
             {
-                var errorMsg = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"[ERROR] Cricket API HTTP Error: {response.StatusCode} - {errorMsg}");
+                Console.WriteLine($"[ERROR] Cricket API HTTP Error: {response.StatusCode} - {content}");
                 throw new Exception($"Cricket API Error: {response.StatusCode}");
             }
 
-            var content = await response.Content.ReadAsStringAsync();
-            var json = JObject.Parse(content);
             var data = json["data"];
-
             var matches = new List<CricketMatch>();
             if (data != null)
             {
@@ -45,9 +51,54 @@ public class CricketDataClient : ICricketDataClient
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] GetCurrentMatchesAsync Exception: {ex.Message}");
-            throw;
+            Console.WriteLine($"[ERROR] GetCurrentMatchesAsync Exception: {ex.Message}. Falling back to MOCK DATA.");
+            return GetMockMatches();
         }
+    }
+
+    private List<CricketMatch> GetMockMatches()
+    {
+        return new List<CricketMatch>
+        {
+            // CURRENT (LIVE)
+            new CricketMatch {
+                Id = "mock-1", Name = "India vs Australia, 3rd T20I", MatchType = "t20", 
+                Status = "India need 42 runs in 24 balls", Venue = "Wankhede Stadium, Mumbai",
+                Team1 = "India", Team1Short = "IND", Team2 = "Australia", Team2Short = "AUS",
+                Team1Score = "142/4 (16)", Team2Score = "183/8 (20)",
+                MatchStarted = true, MatchEnded = false, Series = "Australia tour of India 2026",
+                Team1Image = "https://g.cricapi.com/iapi/13-637877078351545638.webp?w=48",
+                Team2Image = "https://g.cricapi.com/iapi/2-637877085731966270.webp?w=48"
+            },
+            new CricketMatch {
+                Id = "mock-2", Name = "Chennai Super Kings vs Mumbai Indians", MatchType = "t20", 
+                Status = "MI elected to bat", Venue = "MA Chidambaram Stadium, Chennai",
+                Team1 = "Chennai Super Kings", Team1Short = "CSK", Team2 = "Mumbai Indians", Team2Short = "MI",
+                Team1Score = "0/0 (0)", Team2Score = "12/0 (1.2)",
+                MatchStarted = true, MatchEnded = false, Series = "Indian Premier League 2026",
+                Team1Image = "https://g.cricapi.com/iapi/245-637852923053703350.webp?w=48",
+                Team2Image = "https://g.cricapi.com/iapi/248-637852920436440263.webp?w=48"
+            },
+            // UPCOMING
+            new CricketMatch {
+                Id = "mock-3", Name = "England vs South Africa, 1st ODI", MatchType = "odi", 
+                Status = "Starts tomorrow, 10:30 AM", Venue = "The Lord's, London",
+                Team1 = "England", Team1Short = "ENG", Team2 = "South Africa", Team2Short = "RSA",
+                MatchStarted = false, MatchEnded = false, Series = "South Africa tour of England 2026",
+                Team1Image = "https://g.cricapi.com/iapi/1-637877088537242817.webp?w=48",
+                Team2Image = "https://g.cricapi.com/iapi/22-637877084511059929.webp?w=48"
+            },
+            // PAST (FINISHED)
+            new CricketMatch {
+                Id = "mock-4", Name = "New Zealand vs Pakistan, 2nd Test", MatchType = "test", 
+                Status = "NZ won by 7 wickets", Venue = "Basin Reserve, Wellington",
+                Team1 = "New Zealand", Team1Short = "NZ", Team2 = "Pakistan", Team2Short = "PAK",
+                Team1Score = "342 & 184/3", Team2Score = "312 & 210",
+                MatchStarted = true, MatchEnded = true, Series = "Pakistan tour of New Zealand 2026",
+                Team1Image = "https://g.cricapi.com/iapi/40-637877080826978648.webp?w=48",
+                Team2Image = "https://g.cricapi.com/iapi/24-637877083072186985.webp?w=48"
+            }
+        };
     }
 
     public async Task<CricketMatch?> GetMatchDetailsAsync(string matchId)

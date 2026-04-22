@@ -35,21 +35,6 @@ final matchRepositoryProvider = AutoDisposeProvider<MatchRepository>.internal(
 );
 
 typedef MatchRepositoryRef = AutoDisposeProviderRef<MatchRepository>;
-String _$currentMatchesHash() => r'efe698f1cffc4250797749489b9bb89611caad0a';
-
-/// See also [currentMatches].
-@ProviderFor(currentMatches)
-final currentMatchesProvider = AutoDisposeFutureProvider<List<Match>>.internal(
-  currentMatches,
-  name: r'currentMatchesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$currentMatchesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef CurrentMatchesRef = AutoDisposeFutureProviderRef<List<Match>>;
 String _$matchInsightsHash() => r'dbf2150e9338972d48d9b26825f98290cd3694e9';
 
 /// Copied from Dart SDK
@@ -199,5 +184,38 @@ class _MatchInsightsProviderElement
   @override
   String get matchId => (origin as MatchInsightsProvider).matchId;
 }
+
+String _$currentMatchesHash() => r'80ab06789420ea8a5ca51f20eb9868681b91eac3';
+
+/// See also [CurrentMatches].
+@ProviderFor(CurrentMatches)
+final currentMatchesProvider =
+    AutoDisposeAsyncNotifierProvider<CurrentMatches, List<Match>>.internal(
+  CurrentMatches.new,
+  name: r'currentMatchesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentMatchesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentMatches = AutoDisposeAsyncNotifier<List<Match>>;
+String _$matchTypeFilterHash() => r'c1db83b77b8d68d064fad9703f44822ef6c21ca1';
+
+/// See also [MatchTypeFilter].
+@ProviderFor(MatchTypeFilter)
+final matchTypeFilterProvider =
+    AutoDisposeNotifierProvider<MatchTypeFilter, String>.internal(
+  MatchTypeFilter.new,
+  name: r'matchTypeFilterProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$matchTypeFilterHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MatchTypeFilter = AutoDisposeNotifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
