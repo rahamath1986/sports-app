@@ -25,3 +25,21 @@ Future<List<Match>> currentMatches(CurrentMatchesRef ref) {
 Future<MatchInsights> matchInsights(MatchInsightsRef ref, String matchId) {
   return ref.watch(matchRepositoryProvider).getMatchInsights(matchId);
 }
+
+// Filter State
+@riverpod
+class MatchFilter extends _$MatchFilter {
+  @override
+  String build() => 'All';
+
+  void setFilter(String filter) => state = filter;
+}
+
+@riverpod
+Future<List<Match>> filteredMatches(FilteredMatchesRef ref) async {
+  final matches = await ref.watch(currentMatchesProvider.future);
+  final filter = ref.watch(matchFilterProvider);
+
+  if (filter == 'All') return matches;
+  return matches.where((m) => m.matchType.toLowerCase() == filter.toLowerCase()).toList();
+}

@@ -18,6 +18,7 @@ class Match with _$Match {
     @Default('') String team2,
     @Default('') String team1Short,
     @Default('') String team2Short,
+    @Default('') String series,
     @Default(false) bool fantasyEnabled,
     @Default(false) bool matchStarted,
     @Default(false) bool matchEnded,

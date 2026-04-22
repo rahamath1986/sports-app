@@ -14,6 +14,7 @@ public class CricketMatch
     public string Team2 { get; set; } = string.Empty;
     public string Team1Short { get; set; } = string.Empty;
     public string Team2Short { get; set; } = string.Empty;
+    public string Series { get; set; } = string.Empty;
     public bool FantasyEnabled { get; set; }
     public bool MatchStarted { get; set; }
     public bool MatchEnded { get; set; }

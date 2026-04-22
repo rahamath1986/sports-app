@@ -14,7 +14,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final matchesAsync = ref.watch(currentMatchesProvider);
+    final matchesAsync = ref.watch(filteredMatchesProvider);
+    final currentFilter = ref.watch(matchFilterProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0F172A), // Dark Navy
@@ -67,27 +68,69 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-      body: matchesAsync.when(
-        data: (matches) => ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: matches.length,
-          itemBuilder: (context, index) {
-            final match = matches[index];
-            return GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MatchDetailScreen(match: match)),
+      body: Column(
+        children: [
+          // Filter Chips
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: ['All', 'T20', 'ODI', 'Test'].map((filter) {
+                final isSelected = currentFilter == filter;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: FilterChip(
+                    label: Text(filter),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      ref.read(matchFilterProvider.notifier).setFilter(filter);
+                    },
+                    backgroundColor: Colors.white.withOpacity(0.05),
+                    selectedColor: Colors.blueAccent.withOpacity(0.2),
+                    checkmarkColor: Colors.blueAccent,
+                    labelStyle: GoogleFonts.outfit(
+                      color: isSelected ? Colors.blueAccent : Colors.white60,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontSize: 13,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(
+                        color: isSelected ? Colors.blueAccent : Colors.white10,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          Expanded(
+            child: matchesAsync.when(
+              data: (matches) => matches.isEmpty 
+                ? Center(child: Text('No $currentFilter matches found', style: const TextStyle(color: Colors.white38)))
+                : ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: matches.length,
+                itemBuilder: (context, index) {
+                  final match = matches[index];
+                  return GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MatchDetailScreen(match: match)),
+                    ),
+                    child: MatchCard(match: match),
+                  );
+                },
               ),
-              child: MatchCard(match: match),
-            );
-          },
-        ),
-        loading: () => const Center(
-            child: CircularProgressIndicator(color: Colors.blueAccent)),
-        error: (err, stack) => Center(
-            child: Text('Error: $err',
-                style: const TextStyle(color: Colors.white))),
+              loading: () => const Center(
+                  child: CircularProgressIndicator(color: Colors.blueAccent)),
+              error: (err, stack) => Center(
+                  child: Text('Error: $err',
+                      style: const TextStyle(color: Colors.white))),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -120,33 +163,32 @@ class MatchCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Text(
-                    match.matchType.toUpperCase(),
-                    style: GoogleFonts.outfit(
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                  if (match.fantasyEnabled) ...[
-                    const SizedBox(width: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: Colors.amber.withOpacity(0.3)),
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(
+                      match.matchType.toUpperCase(),
+                      style: GoogleFonts.outfit(
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
                       ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
                       child: Text(
-                        'FANTASY',
+                        match.series,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.outfit(
-                            color: Colors.amber, fontSize: 8, fontWeight: FontWeight.bold),
+                          color: Colors.white24,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
-                ],
+                ),
               ),
               _StatusBadge(
                 isLive: match.matchStarted && !match.matchEnded,

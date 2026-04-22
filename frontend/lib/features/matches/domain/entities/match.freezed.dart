@@ -32,6 +32,7 @@ mixin _$Match {
   String get team2 => throw _privateConstructorUsedError;
   String get team1Short => throw _privateConstructorUsedError;
   String get team2Short => throw _privateConstructorUsedError;
+  String get series => throw _privateConstructorUsedError;
   bool get fantasyEnabled => throw _privateConstructorUsedError;
   bool get matchStarted => throw _privateConstructorUsedError;
   bool get matchEnded => throw _privateConstructorUsedError;
@@ -63,6 +64,7 @@ abstract class $MatchCopyWith<$Res> {
       String team2,
       String team1Short,
       String team2Short,
+      String series,
       bool fantasyEnabled,
       bool matchStarted,
       bool matchEnded,
@@ -97,6 +99,7 @@ class _$MatchCopyWithImpl<$Res, $Val extends Match>
     Object? team2 = null,
     Object? team1Short = null,
     Object? team2Short = null,
+    Object? series = null,
     Object? fantasyEnabled = null,
     Object? matchStarted = null,
     Object? matchEnded = null,
@@ -154,6 +157,10 @@ class _$MatchCopyWithImpl<$Res, $Val extends Match>
           ? _value.team2Short
           : team2Short // ignore: cast_nullable_to_non_nullable
               as String,
+      series: null == series
+          ? _value.series
+          : series // ignore: cast_nullable_to_non_nullable
+              as String,
       fantasyEnabled: null == fantasyEnabled
           ? _value.fantasyEnabled
           : fantasyEnabled // ignore: cast_nullable_to_non_nullable
@@ -206,6 +213,7 @@ abstract class _$$MatchImplCopyWith<$Res> implements $MatchCopyWith<$Res> {
       String team2,
       String team1Short,
       String team2Short,
+      String series,
       bool fantasyEnabled,
       bool matchStarted,
       bool matchEnded,
@@ -238,6 +246,7 @@ class __$$MatchImplCopyWithImpl<$Res>
     Object? team2 = null,
     Object? team1Short = null,
     Object? team2Short = null,
+    Object? series = null,
     Object? fantasyEnabled = null,
     Object? matchStarted = null,
     Object? matchEnded = null,
@@ -295,6 +304,10 @@ class __$$MatchImplCopyWithImpl<$Res>
           ? _value.team2Short
           : team2Short // ignore: cast_nullable_to_non_nullable
               as String,
+      series: null == series
+          ? _value.series
+          : series // ignore: cast_nullable_to_non_nullable
+              as String,
       fantasyEnabled: null == fantasyEnabled
           ? _value.fantasyEnabled
           : fantasyEnabled // ignore: cast_nullable_to_non_nullable
@@ -343,6 +356,7 @@ class _$MatchImpl implements _Match {
       this.team2 = '',
       this.team1Short = '',
       this.team2Short = '',
+      this.series = '',
       this.fantasyEnabled = false,
       this.matchStarted = false,
       this.matchEnded = false,
@@ -397,6 +411,9 @@ class _$MatchImpl implements _Match {
   final String team2Short;
   @override
   @JsonKey()
+  final String series;
+  @override
+  @JsonKey()
   final bool fantasyEnabled;
   @override
   @JsonKey()
@@ -415,7 +432,7 @@ class _$MatchImpl implements _Match {
 
   @override
   String toString() {
-    return 'Match(id: $id, name: $name, matchType: $matchType, status: $status, venue: $venue, date: $date, score: $score, teams: $teams, team1: $team1, team2: $team2, team1Short: $team1Short, team2Short: $team2Short, fantasyEnabled: $fantasyEnabled, matchStarted: $matchStarted, matchEnded: $matchEnded, team1Image: $team1Image, team2Image: $team2Image, team1Score: $team1Score, team2Score: $team2Score)';
+    return 'Match(id: $id, name: $name, matchType: $matchType, status: $status, venue: $venue, date: $date, score: $score, teams: $teams, team1: $team1, team2: $team2, team1Short: $team1Short, team2Short: $team2Short, series: $series, fantasyEnabled: $fantasyEnabled, matchStarted: $matchStarted, matchEnded: $matchEnded, team1Image: $team1Image, team2Image: $team2Image, team1Score: $team1Score, team2Score: $team2Score)';
   }
 
   @override
@@ -438,6 +455,7 @@ class _$MatchImpl implements _Match {
                 other.team1Short == team1Short) &&
             (identical(other.team2Short, team2Short) ||
                 other.team2Short == team2Short) &&
+            (identical(other.series, series) || other.series == series) &&
             (identical(other.fantasyEnabled, fantasyEnabled) ||
                 other.fantasyEnabled == fantasyEnabled) &&
             (identical(other.matchStarted, matchStarted) ||
@@ -470,6 +488,7 @@ class _$MatchImpl implements _Match {
         team2,
         team1Short,
         team2Short,
+        series,
         fantasyEnabled,
         matchStarted,
         matchEnded,
@@ -507,6 +526,7 @@ abstract class _Match implements Match {
       final String team2,
       final String team1Short,
       final String team2Short,
+      final String series,
       final bool fantasyEnabled,
       final bool matchStarted,
       final bool matchEnded,
@@ -541,6 +561,8 @@ abstract class _Match implements Match {
   String get team1Short;
   @override
   String get team2Short;
+  @override
+  String get series;
   @override
   bool get fantasyEnabled;
   @override
