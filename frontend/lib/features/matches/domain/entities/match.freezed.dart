@@ -28,6 +28,10 @@ mixin _$Match {
   DateTime get date => throw _privateConstructorUsedError;
   List<TeamScore> get score => throw _privateConstructorUsedError;
   String get teams => throw _privateConstructorUsedError;
+  String? get team1Image => throw _privateConstructorUsedError;
+  String? get team2Image => throw _privateConstructorUsedError;
+  String? get team1Score => throw _privateConstructorUsedError;
+  String? get team2Score => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,7 +51,11 @@ abstract class $MatchCopyWith<$Res> {
       String venue,
       DateTime date,
       List<TeamScore> score,
-      String teams});
+      String teams,
+      String? team1Image,
+      String? team2Image,
+      String? team1Score,
+      String? team2Score});
 }
 
 /// @nodoc
@@ -71,6 +79,10 @@ class _$MatchCopyWithImpl<$Res, $Val extends Match>
     Object? date = null,
     Object? score = null,
     Object? teams = null,
+    Object? team1Image = freezed,
+    Object? team2Image = freezed,
+    Object? team1Score = freezed,
+    Object? team2Score = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -105,6 +117,22 @@ class _$MatchCopyWithImpl<$Res, $Val extends Match>
           ? _value.teams
           : teams // ignore: cast_nullable_to_non_nullable
               as String,
+      team1Image: freezed == team1Image
+          ? _value.team1Image
+          : team1Image // ignore: cast_nullable_to_non_nullable
+              as String?,
+      team2Image: freezed == team2Image
+          ? _value.team2Image
+          : team2Image // ignore: cast_nullable_to_non_nullable
+              as String?,
+      team1Score: freezed == team1Score
+          ? _value.team1Score
+          : team1Score // ignore: cast_nullable_to_non_nullable
+              as String?,
+      team2Score: freezed == team2Score
+          ? _value.team2Score
+          : team2Score // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -124,7 +152,11 @@ abstract class _$$MatchImplCopyWith<$Res> implements $MatchCopyWith<$Res> {
       String venue,
       DateTime date,
       List<TeamScore> score,
-      String teams});
+      String teams,
+      String? team1Image,
+      String? team2Image,
+      String? team1Score,
+      String? team2Score});
 }
 
 /// @nodoc
@@ -146,6 +178,10 @@ class __$$MatchImplCopyWithImpl<$Res>
     Object? date = null,
     Object? score = null,
     Object? teams = null,
+    Object? team1Image = freezed,
+    Object? team2Image = freezed,
+    Object? team1Score = freezed,
+    Object? team2Score = freezed,
   }) {
     return _then(_$MatchImpl(
       id: null == id
@@ -180,6 +216,22 @@ class __$$MatchImplCopyWithImpl<$Res>
           ? _value.teams
           : teams // ignore: cast_nullable_to_non_nullable
               as String,
+      team1Image: freezed == team1Image
+          ? _value.team1Image
+          : team1Image // ignore: cast_nullable_to_non_nullable
+              as String?,
+      team2Image: freezed == team2Image
+          ? _value.team2Image
+          : team2Image // ignore: cast_nullable_to_non_nullable
+              as String?,
+      team1Score: freezed == team1Score
+          ? _value.team1Score
+          : team1Score // ignore: cast_nullable_to_non_nullable
+              as String?,
+      team2Score: freezed == team2Score
+          ? _value.team2Score
+          : team2Score // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -195,7 +247,11 @@ class _$MatchImpl implements _Match {
       required this.venue,
       required this.date,
       final List<TeamScore> score = const [],
-      required this.teams})
+      required this.teams,
+      this.team1Image,
+      this.team2Image,
+      this.team1Score,
+      this.team2Score})
       : _score = score;
 
   factory _$MatchImpl.fromJson(Map<String, dynamic> json) =>
@@ -224,10 +280,18 @@ class _$MatchImpl implements _Match {
 
   @override
   final String teams;
+  @override
+  final String? team1Image;
+  @override
+  final String? team2Image;
+  @override
+  final String? team1Score;
+  @override
+  final String? team2Score;
 
   @override
   String toString() {
-    return 'Match(id: $id, name: $name, matchType: $matchType, status: $status, venue: $venue, date: $date, score: $score, teams: $teams)';
+    return 'Match(id: $id, name: $name, matchType: $matchType, status: $status, venue: $venue, date: $date, score: $score, teams: $teams, team1Image: $team1Image, team2Image: $team2Image, team1Score: $team1Score, team2Score: $team2Score)';
   }
 
   @override
@@ -243,13 +307,33 @@ class _$MatchImpl implements _Match {
             (identical(other.venue, venue) || other.venue == venue) &&
             (identical(other.date, date) || other.date == date) &&
             const DeepCollectionEquality().equals(other._score, _score) &&
-            (identical(other.teams, teams) || other.teams == teams));
+            (identical(other.teams, teams) || other.teams == teams) &&
+            (identical(other.team1Image, team1Image) ||
+                other.team1Image == team1Image) &&
+            (identical(other.team2Image, team2Image) ||
+                other.team2Image == team2Image) &&
+            (identical(other.team1Score, team1Score) ||
+                other.team1Score == team1Score) &&
+            (identical(other.team2Score, team2Score) ||
+                other.team2Score == team2Score));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, matchType, status,
-      venue, date, const DeepCollectionEquality().hash(_score), teams);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      matchType,
+      status,
+      venue,
+      date,
+      const DeepCollectionEquality().hash(_score),
+      teams,
+      team1Image,
+      team2Image,
+      team1Score,
+      team2Score);
 
   @JsonKey(ignore: true)
   @override
@@ -274,7 +358,11 @@ abstract class _Match implements Match {
       required final String venue,
       required final DateTime date,
       final List<TeamScore> score,
-      required final String teams}) = _$MatchImpl;
+      required final String teams,
+      final String? team1Image,
+      final String? team2Image,
+      final String? team1Score,
+      final String? team2Score}) = _$MatchImpl;
 
   factory _Match.fromJson(Map<String, dynamic> json) = _$MatchImpl.fromJson;
 
@@ -294,6 +382,14 @@ abstract class _Match implements Match {
   List<TeamScore> get score;
   @override
   String get teams;
+  @override
+  String? get team1Image;
+  @override
+  String? get team2Image;
+  @override
+  String? get team1Score;
+  @override
+  String? get team2Score;
   @override
   @JsonKey(ignore: true)
   _$$MatchImplCopyWith<_$MatchImpl> get copyWith =>

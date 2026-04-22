@@ -20,7 +20,7 @@ public class CricketDataClient : ICricketDataClient
     {
         try
         {
-            var response = await _httpClient.GetAsync($"currentMatches?apikey={ApiKey}");
+            var response = await _httpClient.GetAsync($"cricScore?apikey={ApiKey}");
             if (!response.IsSuccessStatusCode)
             {
                 var errorMsg = await response.Content.ReadAsStringAsync();
@@ -37,7 +37,7 @@ public class CricketDataClient : ICricketDataClient
             {
                 foreach (var item in data)
                 {
-                    matches.Add(MapToMatch(item));
+                    matches.Add(MapToMatch(item, true));
                 }
             }
 
@@ -62,7 +62,7 @@ public class CricketDataClient : ICricketDataClient
         return data != null ? MapToMatch(data) : null;
     }
 
-    private CricketMatch MapToMatch(JToken item)
+    private CricketMatch MapToMatch(JToken item, bool isCricScore = false)
     {
         var match = new CricketMatch
         {
@@ -71,10 +71,24 @@ public class CricketDataClient : ICricketDataClient
             MatchType = item["matchType"]?.ToString() ?? string.Empty,
             Status = item["status"]?.ToString() ?? string.Empty,
             Venue = item["venue"]?.ToString() ?? string.Empty,
-            Teams = string.Join(" vs ", item["teams"]?.Select(t => t.ToString()) ?? new List<string>())
         };
 
-        if (DateTime.TryParse(item["date"]?.ToString(), out var date))
+        if (isCricScore)
+        {
+            // cricScore specific mapping
+            match.Team1Image = item["t1img"]?.ToString();
+            match.Team2Image = item["t2img"]?.ToString();
+            match.Team1Score = item["t1s"]?.ToString();
+            match.Team2Score = item["t2s"]?.ToString();
+            match.Teams = $"{item["t1"]} vs {item["t2"]}";
+        }
+        else
+        {
+            // Standard match_info mapping
+            match.Teams = string.Join(" vs ", item["teams"]?.Select(t => t.ToString()) ?? new List<string>());
+        }
+
+        if (DateTime.TryParse(item["date"]?.ToString() ?? item["dateTimeGMT"]?.ToString(), out var date))
         {
             match.Date = date;
         }

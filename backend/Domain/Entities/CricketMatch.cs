@@ -10,6 +10,12 @@ public class CricketMatch
     public DateTime Date { get; set; }
     public List<TeamScore> Score { get; set; } = new();
     public string Teams { get; set; } = string.Empty;
+
+    // New fields for cricScore API
+    public string? Team1Image { get; set; }
+    public string? Team2Image { get; set; }
+    public string? Team1Score { get; set; }
+    public string? Team2Score { get; set; }
 }
 
 public class TeamScore

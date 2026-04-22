@@ -18,6 +18,10 @@ _$MatchImpl _$$MatchImplFromJson(Map<String, dynamic> json) => _$MatchImpl(
               .toList() ??
           const [],
       teams: json['teams'] as String,
+      team1Image: json['team1Image'] as String?,
+      team2Image: json['team2Image'] as String?,
+      team1Score: json['team1Score'] as String?,
+      team2Score: json['team2Score'] as String?,
     );
 
 Map<String, dynamic> _$$MatchImplToJson(_$MatchImpl instance) =>
@@ -30,6 +34,10 @@ Map<String, dynamic> _$$MatchImplToJson(_$MatchImpl instance) =>
       'date': instance.date.toIso8601String(),
       'score': instance.score,
       'teams': instance.teams,
+      'team1Image': instance.team1Image,
+      'team2Image': instance.team2Image,
+      'team1Score': instance.team1Score,
+      'team2Score': instance.team2Score,
     };
 
 _$TeamScoreImpl _$$TeamScoreImplFromJson(Map<String, dynamic> json) =>

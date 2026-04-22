@@ -118,21 +118,48 @@ class MatchCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(
-            match.name,
-            style: GoogleFonts.outfit(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            children: [
+              if (match.team1Image != null)
+                Image.network(match.team1Image!, width: 32, height: 32),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  match.name,
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              if (match.team2Image != null)
+                Image.network(match.team2Image!, width: 32, height: 32),
+            ],
           ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                match.status,
-                style: GoogleFonts.outfit(color: Colors.white70, fontSize: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (match.team1Score != null || match.team2Score != null)
+                      Text(
+                        '${match.team1Score ?? ""} vs ${match.team2Score ?? ""}',
+                        style: GoogleFonts.outfit(
+                            color: Colors.amberAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                      ),
+                    Text(
+                      match.status,
+                      style: GoogleFonts.outfit(
+                          color: Colors.white70, fontSize: 13),
+                    ),
+                  ],
+                ),
               ),
               const Icon(Icons.arrow_forward_ios,
                   color: Colors.white24, size: 16),
