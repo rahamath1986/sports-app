@@ -3,19 +3,19 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy project files and restore dependencies
-# Note: We copy based on relative paths for the solution context
-COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
-COPY ["Application/Application.csproj", "Application/"]
-COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
-COPY ["Domain/Domain.csproj", "Domain/"]
+# Using backend/ prefix assuming the build context is the repository root
+COPY ["backend/WebAPI/WebAPI.csproj", "backend/WebAPI/"]
+COPY ["backend/Application/Application.csproj", "backend/Application/"]
+COPY ["backend/Infrastructure/Infrastructure.csproj", "backend/Infrastructure/"]
+COPY ["backend/Domain/Domain.csproj", "backend/Domain/"]
 
-RUN dotnet restore "WebAPI/WebAPI.csproj"
+RUN dotnet restore "backend/WebAPI/WebAPI.csproj"
 
 # Copy the rest of the code
 COPY . .
 
 # Build the WebAPI project
-WORKDIR "/src/WebAPI"
+WORKDIR "/src/backend/WebAPI"
 RUN dotnet build "WebAPI.csproj" -c Release -o /app/build
 
 # Stage 2: Publish the application
