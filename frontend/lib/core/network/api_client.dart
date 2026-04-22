@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:curl_logger_dio_interceptor/curl_logger_dio_interceptor.dart';
 
 class ApiClient {
   final Dio dio;
@@ -12,7 +13,9 @@ class ApiClient {
             receiveTimeout: const Duration(seconds: 3),
             headers: {'Content-Type': 'application/json'},
           ),
-        );
+        ) {
+    dio.interceptors.add(CurlLoggerDioInterceptor(printOnSuccess: true));
+  }
 
   Future<Response> get(String path, {Map<String, dynamic>? queryParameters}) async {
     try {

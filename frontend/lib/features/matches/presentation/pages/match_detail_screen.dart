@@ -5,19 +5,21 @@ import 'package:sports_app/features/matches/presentation/providers/match_provide
 import 'package:sports_app/core/providers/app_state_provider.dart';
 import 'package:sports_app/core/services/voice_service.dart';
 
+import 'package:sports_app/features/matches/domain/entities/match.dart' as entity;
+
 class MatchDetailScreen extends ConsumerWidget {
-  final String matchId;
-  const MatchDetailScreen({super.key, required this.matchId});
+  final entity.Match match;
+  const MatchDetailScreen({super.key, required this.match});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final insightsAsync = ref.watch(matchInsightsProvider(matchId));
+    final insightsAsync = ref.watch(matchInsightsProvider(match.id));
     final isLiteMode = ref.watch(liteModeProvider);
     final isVoiceEnabled = ref.watch(voiceEnabledProvider);
     final voiceService = VoiceService();
 
     // Trigger voice when insights change
-    ref.listen(matchInsightsProvider(matchId), (previous, next) {
+    ref.listen(matchInsightsProvider(match.id), (previous, next) {
       if (isVoiceEnabled && next.hasValue) {
         voiceService.speak(next.value!.aiCommentary);
       }
@@ -28,7 +30,8 @@ class MatchDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('MATCH ANALYSIS', style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold)),
+        title: Text('${match.team1Short} vs ${match.team2Short}',
+            style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -37,7 +40,7 @@ class MatchDetailScreen extends ConsumerWidget {
             insightsAsync.when(
               data: (insights) => Column(
                 children: [
-                  WinProbabilitySection(insights: insights),
+                  WinProbabilitySection(match: match, insights: insights),
                   const SizedBox(height: 24),
                   AiCommentaryPanel(commentary: insights.aiCommentary),
                   const SizedBox(height: 24),
@@ -56,7 +59,8 @@ class MatchDetailScreen extends ConsumerWidget {
 
 class WinProbabilitySection extends StatelessWidget {
   final dynamic insights;
-  const WinProbabilitySection({super.key, required this.insights});
+  final entity.Match match;
+  const WinProbabilitySection({super.key, required this.match, required this.insights});
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +81,8 @@ class WinProbabilitySection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _ProbIndicator(label: 'TEAM A', prob: insights.winProbabilityTeamA, color: Colors.blueAccent),
-              _ProbIndicator(label: 'TEAM B', prob: insights.winProbabilityTeamB, color: Colors.purpleAccent),
+              _ProbIndicator(label: match.team1Short.isEmpty ? match.team1.toUpperCase() : match.team1Short, prob: insights.winProbabilityTeamA, color: Colors.blueAccent),
+              _ProbIndicator(label: match.team2Short.isEmpty ? match.team2.toUpperCase() : match.team2Short, prob: insights.winProbabilityTeamB, color: Colors.purpleAccent),
             ],
           ),
           const SizedBox(height: 16),

@@ -10,8 +10,15 @@ public class CricketMatch
     public DateTime Date { get; set; }
     public List<TeamScore> Score { get; set; } = new();
     public string Teams { get; set; } = string.Empty;
+    public string Team1 { get; set; } = string.Empty;
+    public string Team2 { get; set; } = string.Empty;
+    public string Team1Short { get; set; } = string.Empty;
+    public string Team2Short { get; set; } = string.Empty;
+    public bool FantasyEnabled { get; set; }
+    public bool MatchStarted { get; set; }
+    public bool MatchEnded { get; set; }
 
-    // New fields for cricScore API
+    // New fields for currentMatches API
     public string? Team1Image { get; set; }
     public string? Team2Image { get; set; }
     public string? Team1Score { get; set; }

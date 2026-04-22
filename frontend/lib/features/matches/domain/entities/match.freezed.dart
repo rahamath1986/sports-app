@@ -28,6 +28,13 @@ mixin _$Match {
   DateTime get date => throw _privateConstructorUsedError;
   List<TeamScore> get score => throw _privateConstructorUsedError;
   String get teams => throw _privateConstructorUsedError;
+  String get team1 => throw _privateConstructorUsedError;
+  String get team2 => throw _privateConstructorUsedError;
+  String get team1Short => throw _privateConstructorUsedError;
+  String get team2Short => throw _privateConstructorUsedError;
+  bool get fantasyEnabled => throw _privateConstructorUsedError;
+  bool get matchStarted => throw _privateConstructorUsedError;
+  bool get matchEnded => throw _privateConstructorUsedError;
   String? get team1Image => throw _privateConstructorUsedError;
   String? get team2Image => throw _privateConstructorUsedError;
   String? get team1Score => throw _privateConstructorUsedError;
@@ -52,6 +59,13 @@ abstract class $MatchCopyWith<$Res> {
       DateTime date,
       List<TeamScore> score,
       String teams,
+      String team1,
+      String team2,
+      String team1Short,
+      String team2Short,
+      bool fantasyEnabled,
+      bool matchStarted,
+      bool matchEnded,
       String? team1Image,
       String? team2Image,
       String? team1Score,
@@ -79,6 +93,13 @@ class _$MatchCopyWithImpl<$Res, $Val extends Match>
     Object? date = null,
     Object? score = null,
     Object? teams = null,
+    Object? team1 = null,
+    Object? team2 = null,
+    Object? team1Short = null,
+    Object? team2Short = null,
+    Object? fantasyEnabled = null,
+    Object? matchStarted = null,
+    Object? matchEnded = null,
     Object? team1Image = freezed,
     Object? team2Image = freezed,
     Object? team1Score = freezed,
@@ -117,6 +138,34 @@ class _$MatchCopyWithImpl<$Res, $Val extends Match>
           ? _value.teams
           : teams // ignore: cast_nullable_to_non_nullable
               as String,
+      team1: null == team1
+          ? _value.team1
+          : team1 // ignore: cast_nullable_to_non_nullable
+              as String,
+      team2: null == team2
+          ? _value.team2
+          : team2 // ignore: cast_nullable_to_non_nullable
+              as String,
+      team1Short: null == team1Short
+          ? _value.team1Short
+          : team1Short // ignore: cast_nullable_to_non_nullable
+              as String,
+      team2Short: null == team2Short
+          ? _value.team2Short
+          : team2Short // ignore: cast_nullable_to_non_nullable
+              as String,
+      fantasyEnabled: null == fantasyEnabled
+          ? _value.fantasyEnabled
+          : fantasyEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      matchStarted: null == matchStarted
+          ? _value.matchStarted
+          : matchStarted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      matchEnded: null == matchEnded
+          ? _value.matchEnded
+          : matchEnded // ignore: cast_nullable_to_non_nullable
+              as bool,
       team1Image: freezed == team1Image
           ? _value.team1Image
           : team1Image // ignore: cast_nullable_to_non_nullable
@@ -153,6 +202,13 @@ abstract class _$$MatchImplCopyWith<$Res> implements $MatchCopyWith<$Res> {
       DateTime date,
       List<TeamScore> score,
       String teams,
+      String team1,
+      String team2,
+      String team1Short,
+      String team2Short,
+      bool fantasyEnabled,
+      bool matchStarted,
+      bool matchEnded,
       String? team1Image,
       String? team2Image,
       String? team1Score,
@@ -178,6 +234,13 @@ class __$$MatchImplCopyWithImpl<$Res>
     Object? date = null,
     Object? score = null,
     Object? teams = null,
+    Object? team1 = null,
+    Object? team2 = null,
+    Object? team1Short = null,
+    Object? team2Short = null,
+    Object? fantasyEnabled = null,
+    Object? matchStarted = null,
+    Object? matchEnded = null,
     Object? team1Image = freezed,
     Object? team2Image = freezed,
     Object? team1Score = freezed,
@@ -216,6 +279,34 @@ class __$$MatchImplCopyWithImpl<$Res>
           ? _value.teams
           : teams // ignore: cast_nullable_to_non_nullable
               as String,
+      team1: null == team1
+          ? _value.team1
+          : team1 // ignore: cast_nullable_to_non_nullable
+              as String,
+      team2: null == team2
+          ? _value.team2
+          : team2 // ignore: cast_nullable_to_non_nullable
+              as String,
+      team1Short: null == team1Short
+          ? _value.team1Short
+          : team1Short // ignore: cast_nullable_to_non_nullable
+              as String,
+      team2Short: null == team2Short
+          ? _value.team2Short
+          : team2Short // ignore: cast_nullable_to_non_nullable
+              as String,
+      fantasyEnabled: null == fantasyEnabled
+          ? _value.fantasyEnabled
+          : fantasyEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      matchStarted: null == matchStarted
+          ? _value.matchStarted
+          : matchStarted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      matchEnded: null == matchEnded
+          ? _value.matchEnded
+          : matchEnded // ignore: cast_nullable_to_non_nullable
+              as bool,
       team1Image: freezed == team1Image
           ? _value.team1Image
           : team1Image // ignore: cast_nullable_to_non_nullable
@@ -241,13 +332,20 @@ class __$$MatchImplCopyWithImpl<$Res>
 class _$MatchImpl implements _Match {
   const _$MatchImpl(
       {required this.id,
-      required this.name,
-      required this.matchType,
-      required this.status,
-      required this.venue,
+      this.name = '',
+      this.matchType = '',
+      this.status = '',
+      this.venue = '',
       required this.date,
       final List<TeamScore> score = const [],
-      required this.teams,
+      this.teams = '',
+      this.team1 = '',
+      this.team2 = '',
+      this.team1Short = '',
+      this.team2Short = '',
+      this.fantasyEnabled = false,
+      this.matchStarted = false,
+      this.matchEnded = false,
       this.team1Image,
       this.team2Image,
       this.team1Score,
@@ -260,12 +358,16 @@ class _$MatchImpl implements _Match {
   @override
   final String id;
   @override
+  @JsonKey()
   final String name;
   @override
+  @JsonKey()
   final String matchType;
   @override
+  @JsonKey()
   final String status;
   @override
+  @JsonKey()
   final String venue;
   @override
   final DateTime date;
@@ -279,7 +381,29 @@ class _$MatchImpl implements _Match {
   }
 
   @override
+  @JsonKey()
   final String teams;
+  @override
+  @JsonKey()
+  final String team1;
+  @override
+  @JsonKey()
+  final String team2;
+  @override
+  @JsonKey()
+  final String team1Short;
+  @override
+  @JsonKey()
+  final String team2Short;
+  @override
+  @JsonKey()
+  final bool fantasyEnabled;
+  @override
+  @JsonKey()
+  final bool matchStarted;
+  @override
+  @JsonKey()
+  final bool matchEnded;
   @override
   final String? team1Image;
   @override
@@ -291,7 +415,7 @@ class _$MatchImpl implements _Match {
 
   @override
   String toString() {
-    return 'Match(id: $id, name: $name, matchType: $matchType, status: $status, venue: $venue, date: $date, score: $score, teams: $teams, team1Image: $team1Image, team2Image: $team2Image, team1Score: $team1Score, team2Score: $team2Score)';
+    return 'Match(id: $id, name: $name, matchType: $matchType, status: $status, venue: $venue, date: $date, score: $score, teams: $teams, team1: $team1, team2: $team2, team1Short: $team1Short, team2Short: $team2Short, fantasyEnabled: $fantasyEnabled, matchStarted: $matchStarted, matchEnded: $matchEnded, team1Image: $team1Image, team2Image: $team2Image, team1Score: $team1Score, team2Score: $team2Score)';
   }
 
   @override
@@ -308,6 +432,18 @@ class _$MatchImpl implements _Match {
             (identical(other.date, date) || other.date == date) &&
             const DeepCollectionEquality().equals(other._score, _score) &&
             (identical(other.teams, teams) || other.teams == teams) &&
+            (identical(other.team1, team1) || other.team1 == team1) &&
+            (identical(other.team2, team2) || other.team2 == team2) &&
+            (identical(other.team1Short, team1Short) ||
+                other.team1Short == team1Short) &&
+            (identical(other.team2Short, team2Short) ||
+                other.team2Short == team2Short) &&
+            (identical(other.fantasyEnabled, fantasyEnabled) ||
+                other.fantasyEnabled == fantasyEnabled) &&
+            (identical(other.matchStarted, matchStarted) ||
+                other.matchStarted == matchStarted) &&
+            (identical(other.matchEnded, matchEnded) ||
+                other.matchEnded == matchEnded) &&
             (identical(other.team1Image, team1Image) ||
                 other.team1Image == team1Image) &&
             (identical(other.team2Image, team2Image) ||
@@ -320,20 +456,28 @@ class _$MatchImpl implements _Match {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      matchType,
-      status,
-      venue,
-      date,
-      const DeepCollectionEquality().hash(_score),
-      teams,
-      team1Image,
-      team2Image,
-      team1Score,
-      team2Score);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        name,
+        matchType,
+        status,
+        venue,
+        date,
+        const DeepCollectionEquality().hash(_score),
+        teams,
+        team1,
+        team2,
+        team1Short,
+        team2Short,
+        fantasyEnabled,
+        matchStarted,
+        matchEnded,
+        team1Image,
+        team2Image,
+        team1Score,
+        team2Score
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -352,13 +496,20 @@ class _$MatchImpl implements _Match {
 abstract class _Match implements Match {
   const factory _Match(
       {required final String id,
-      required final String name,
-      required final String matchType,
-      required final String status,
-      required final String venue,
+      final String name,
+      final String matchType,
+      final String status,
+      final String venue,
       required final DateTime date,
       final List<TeamScore> score,
-      required final String teams,
+      final String teams,
+      final String team1,
+      final String team2,
+      final String team1Short,
+      final String team2Short,
+      final bool fantasyEnabled,
+      final bool matchStarted,
+      final bool matchEnded,
       final String? team1Image,
       final String? team2Image,
       final String? team1Score,
@@ -382,6 +533,20 @@ abstract class _Match implements Match {
   List<TeamScore> get score;
   @override
   String get teams;
+  @override
+  String get team1;
+  @override
+  String get team2;
+  @override
+  String get team1Short;
+  @override
+  String get team2Short;
+  @override
+  bool get fantasyEnabled;
+  @override
+  bool get matchStarted;
+  @override
+  bool get matchEnded;
   @override
   String? get team1Image;
   @override

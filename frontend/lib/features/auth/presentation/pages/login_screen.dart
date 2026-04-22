@@ -11,11 +11,14 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
   void _handleSignIn() async {
+    if (!_formKey.currentState!.validate()) return;
+    
     setState(() => _isLoading = true);
     try {
       await ref.read(authRepositoryProvider).signIn(
@@ -34,6 +37,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _handleSignUp() async {
+    if (!_formKey.currentState!.validate()) return;
+
     setState(() => _isLoading = true);
     try {
       await ref.read(authRepositoryProvider).signUp(
@@ -42,7 +47,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Check your email for confirmation!')),
+          const SnackBar(
+            content: Text('Account created! Check your email (or spam) for confirmation.'),
+            duration: Duration(seconds: 5),
+          ),
         );
       }
     } catch (e) {
@@ -73,42 +81,63 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ],
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.sports_cricket, size: 80, color: Colors.blueAccent),
-            const SizedBox(height: 24),
-            Text(
-              'SPORTS MASTER',
-              style: GoogleFonts.outfit(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 4,
+        child: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.sports_cricket, size: 80, color: Colors.blueAccent),
+                  const SizedBox(height: 24),
+                  Text(
+                    'SPORTS MASTER',
+                    style: GoogleFonts.outfit(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 4,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'The Ultimate Experience',
+                    style: GoogleFonts.outfit(color: Colors.white38, letterSpacing: 1),
+                  ),
+                  const SizedBox(height: 48),
+                  _AuthTextField(
+                    controller: _emailController,
+                    label: 'Email',
+                    icon: Icons.email_outlined,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Please enter your email';
+                      if (!value.contains('@')) return 'Please enter a valid email';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _AuthTextField(
+                    controller: _passwordController,
+                    label: 'Password',
+                    icon: Icons.lock_outline,
+                    isPassword: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Please enter your password';
+                      if (value.length < 6) return 'Password must be at least 6 characters';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 32),
+                  if (_isLoading)
+                    const CircularProgressIndicator(color: Colors.blueAccent)
+                  else ...[
+                    _AuthButton(label: 'SIGN IN', onPressed: _handleSignIn, isPrimary: true),
+                    const SizedBox(height: 12),
+                    _AuthButton(label: 'CREATE ACCOUNT', onPressed: _handleSignUp, isPrimary: false),
+                  ],
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'The Ultimate Experience',
-              style: GoogleFonts.outfit(color: Colors.white38, letterSpacing: 1),
-            ),
-            const SizedBox(height: 48),
-            _AuthTextField(controller: _emailController, label: 'Email', icon: Icons.email_outlined),
-            const SizedBox(height: 16),
-            _AuthTextField(
-              controller: _passwordController,
-              label: 'Password',
-              icon: Icons.lock_outline,
-              isPassword: true,
-            ),
-            const SizedBox(height: 32),
-            if (_isLoading)
-              const CircularProgressIndicator(color: Colors.blueAccent)
-            else ...[
-              _AuthButton(label: 'SIGN IN', onPressed: _handleSignIn, isPrimary: true),
-              const SizedBox(height: 12),
-              _AuthButton(label: 'CREATE ACCOUNT', onPressed: _handleSignUp, isPrimary: false),
-            ],
-          ],
+          ),
         ),
       ),
     );
@@ -120,19 +149,22 @@ class _AuthTextField extends StatelessWidget {
   final String label;
   final IconData icon;
   final bool isPassword;
+  final String? Function(String?)? validator;
 
   const _AuthTextField({
     required this.controller,
     required this.label,
     required this.icon,
     this.isPassword = false,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       obscureText: isPassword,
+      validator: validator,
       style: GoogleFonts.outfit(color: Colors.white),
       decoration: InputDecoration(
         prefixIcon: Icon(icon, color: Colors.blueAccent, size: 20),
@@ -148,6 +180,7 @@ class _AuthTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Colors.blueAccent, width: 1),
         ),
+        errorStyle: GoogleFonts.outfit(color: Colors.redAccent),
       ),
     );
   }
