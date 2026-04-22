@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sports_app/features/matches/presentation/providers/match_provider.dart';
 import 'package:sports_app/core/providers/app_state_provider.dart';
+import 'package:sports_app/features/settings/presentation/pages/settings_screen.dart';
+import 'package:sports_app/features/profile/presentation/pages/profile_screen.dart';
 import 'match_detail_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -35,6 +37,32 @@ class HomeScreen extends ConsumerWidget {
             onPressed: () => ref.read(liteModeProvider.notifier).toggle(),
           ),
         ],
+      drawer: Drawer(
+        backgroundColor: const Color(0xFF0F172A),
+        child: Column(
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.blueAccent),
+              child: Center(
+                child: Text('SPORTS MASTER',
+                    style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.bold, fontSize: 20)),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person_outline),
+              title: const Text('Profile'),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const ProfileScreen())),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings_outlined),
+              title: const Text('Settings'),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen())),
+            ),
+          ],
+        ),
       ),
       body: matchesAsync.when(
         data: (matches) => ListView.builder(
