@@ -13,7 +13,7 @@ public class CricketDataClient : ICricketDataClient
     public CricketDataClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri("https://api.cricketdata.org/v1/");
+        _httpClient.BaseAddress = new Uri("https://api.cricapi.com/v1/");
     }
 
     public async Task<List<CricketMatch>> GetCurrentMatchesAsync()
