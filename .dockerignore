@@ -1,0 +1,9 @@
+.git
+.gitignore
+frontend/
+**/bin
+**/obj
+**/out
+.vscode/
+.vs/
+*.md
