@@ -96,6 +96,4 @@ Both Frontend and Backend follow a strict Clean Architecture pattern:
 
 ---
 
-## 📄 License
 
-Created by **Antigravity AI** for the user. MIT License.
