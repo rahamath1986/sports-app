@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/match_provider.dart';
-import '../../../core/providers/app_state_provider.dart';
+import 'package:sports_app/features/matches/presentation/providers/match_provider.dart';
+import 'package:sports_app/core/providers/app_state_provider.dart';
 import 'match_detail_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -28,7 +29,8 @@ class HomeScreen extends ConsumerWidget {
           IconButton(
             icon: Icon(
               ref.watch(liteModeProvider) ? Icons.bolt : Icons.bolt_outlined,
-              color: ref.watch(liteModeProvider) ? Colors.amber : Colors.white24,
+              color:
+                  ref.watch(liteModeProvider) ? Colors.amber : Colors.white24,
             ),
             onPressed: () => ref.read(liteModeProvider.notifier).toggle(),
           ),
@@ -43,14 +45,18 @@ class HomeScreen extends ConsumerWidget {
             return GestureDetector(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MatchDetailScreen(matchId: match.id)),
+                MaterialPageRoute(
+                    builder: (context) => MatchDetailScreen(matchId: match.id)),
               ),
               child: MatchCard(match: match),
             );
           },
         ),
-        loading: () => const Center(child: CircularProgressIndicator(color: Colors.blueAccent)),
-        error: (err, stack) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.white))),
+        loading: () => const Center(
+            child: CircularProgressIndicator(color: Colors.blueAccent)),
+        error: (err, stack) => Center(
+            child: Text('Error: $err',
+                style: const TextStyle(color: Colors.white))),
       ),
     );
   }
@@ -101,7 +107,11 @@ class MatchCard extends StatelessWidget {
                   children: [
                     CircleAvatar(radius: 3, backgroundColor: Colors.redAccent),
                     SizedBox(width: 4),
-                    Text('LIVE', style: TextStyle(color: Colors.redAccent, fontSize: 10, fontWeight: FontWeight.bold)),
+                    Text('LIVE',
+                        style: TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -124,7 +134,8 @@ class MatchCard extends StatelessWidget {
                 match.status,
                 style: GoogleFonts.outfit(color: Colors.white70, fontSize: 13),
               ),
-              const Icon(Icons.arrow_forward_ios, color: Colors.white24, size: 16),
+              const Icon(Icons.arrow_forward_ios,
+                  color: Colors.white24, size: 16),
             ],
           ),
         ],

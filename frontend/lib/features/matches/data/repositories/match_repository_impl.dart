@@ -1,7 +1,7 @@
-import '../../../../core/network/api_client.dart';
-import '../../domain/entities/match.dart';
-import '../../domain/entities/match_insights.dart';
-import '../../domain/repositories/match_repository.dart';
+import 'package:sports_app/core/network/api_client.dart';
+import 'package:sports_app/features/matches/domain/entities/match.dart';
+import 'package:sports_app/features/matches/domain/entities/match_insights.dart';
+import 'package:sports_app/features/matches/domain/repositories/match_repository.dart';
 
 class MatchRepositoryImpl implements MatchRepository {
   final ApiClient apiClient;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/match_provider.dart';
-import '../../../core/providers/app_state_provider.dart';
-import '../../../core/services/voice_service.dart';
+import 'package:sports_app/features/matches/presentation/providers/match_provider.dart';
+import 'package:sports_app/core/providers/app_state_provider.dart';
+import 'package:sports_app/core/services/voice_service.dart';
 
 class MatchDetailScreen extends ConsumerWidget {
   final String matchId;
